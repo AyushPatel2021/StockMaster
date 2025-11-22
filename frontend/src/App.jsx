@@ -17,6 +17,9 @@ import ReceiptList from './pages/operations/ReceiptList';
 import ReceiptForm from './pages/operations/ReceiptForm';
 import DeliveryList from './pages/operations/DeliveryList';
 import DeliveryForm from './pages/operations/DeliveryForm';
+import TransferList from './pages/operations/TransferList';
+import TransferForm from './pages/operations/TransferForm';
+import History from './pages/History';
 import ManageUsers from './pages/admin/ManageUsers';
 import WarehouseList from './pages/settings/WarehouseList';
 import WarehouseForm from './pages/settings/WarehouseForm';
@@ -84,6 +87,26 @@ function App() {
                     <Route path="/operations/deliveries/:id" element={
                         <ProtectedRoute>
                             <DeliveryForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/transfers" element={
+                        <ProtectedRoute>
+                            <TransferList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/transfers/new" element={
+                        <ProtectedRoute>
+                            <TransferForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/transfers/:id" element={
+                        <ProtectedRoute>
+                            <TransferForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/move-history" element={
+                        <ProtectedRoute>
+                            <History />
                         </ProtectedRoute>
                     } />
                     <Route path="/operations/*" element={

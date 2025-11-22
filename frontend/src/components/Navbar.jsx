@@ -82,19 +82,19 @@ const Navbar = () => {
 
                                         <div className="border-t border-gray-100 my-1"></div>
                                         <Link
-                                            to="/operations/adjustment"
+                                            to="/operations/transfers"
                                             onClick={() => setIsOperationsOpen(false)}
                                             className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-150"
                                         >
-                                            <span className="block">Adjustment</span>
+                                            <span className="block">Transfers</span>
                                         </Link>
                                     </div>
                                 </div>
                             )}
                         </div>
 
-                        {/* Inventory Manager & Admin Links */}
-                        {(user.role === 'InventoryManager' || user.role === 'Admin') && (
+                        {/* Inventory Manager, Admin & Staff Links */}
+                        {(user.role === 'InventoryManager' || user.role === 'Admin' || user.role === 'Staff') && (
                             <>
                                 <Link
                                     to="/stock"
@@ -118,29 +118,33 @@ const Navbar = () => {
                             </>
                         )}
 
-                        {/* Admin Only Links */}
-                        {user.role === 'Admin' && (
+                        {/* Admin & Manager Links */}
+                        {(user.role === 'Admin' || user.role === 'InventoryManager') && (
                             <>
-                                <Link
-                                    to="/products"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/products')
-                                        ? 'bg-indigo-600 text-white'
-                                        : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-600'
-                                        }`}
-                                >
-                                    Products
-                                </Link>
-                                <Link
-                                    to="/manage-users"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/manage-users')
-                                        ? 'bg-indigo-600 text-white'
-                                        : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-600'
-                                        }`}
-                                >
-                                    Users
-                                </Link>
+                                {user.role === 'Admin' && (
+                                    <>
+                                        <Link
+                                            to="/products"
+                                            className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/products')
+                                                ? 'bg-indigo-600 text-white'
+                                                : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-600'
+                                                }`}
+                                        >
+                                            Products
+                                        </Link>
+                                        <Link
+                                            to="/manage-users"
+                                            className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive('/manage-users')
+                                                ? 'bg-indigo-600 text-white'
+                                                : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-600'
+                                                }`}
+                                        >
+                                            Users
+                                        </Link>
+                                    </>
+                                )}
 
-                                {/* Settings Dropdown - Admin Only */}
+                                {/* Settings Dropdown - Admin & Manager */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setIsSettingsOpen(!isSettingsOpen)}
@@ -237,14 +241,14 @@ const Navbar = () => {
                         </Link>
 
                         <Link
-                            to="/operations/adjustment"
+                            to="/operations/transfers"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
                         >
-                            Adjustment
+                            Transfers
                         </Link>
 
-                        {(user.role === 'InventoryManager' || user.role === 'Admin') && (
+                        {(user.role === 'InventoryManager' || user.role === 'Admin' || user.role === 'Staff') && (
                             <>
                                 <Link
                                     to="/stock"
@@ -279,22 +283,26 @@ const Navbar = () => {
                             </>
                         )}
 
-                        {user.role === 'Admin' && (
+                        {(user.role === 'Admin' || user.role === 'InventoryManager') && (
                             <>
-                                <Link
-                                    to="/products"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
-                                >
-                                    Products
-                                </Link>
-                                <Link
-                                    to="/manage-users"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
-                                >
-                                    Users
-                                </Link>
+                                {user.role === 'Admin' && (
+                                    <>
+                                        <Link
+                                            to="/products"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
+                                        >
+                                            Products
+                                        </Link>
+                                        <Link
+                                            to="/manage-users"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
+                                        >
+                                            Users
+                                        </Link>
+                                    </>
+                                )}
                             </>
                         )}
 
