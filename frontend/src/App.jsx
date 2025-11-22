@@ -11,8 +11,13 @@ import Operations from './pages/Operations';
 import Stock from './pages/Stock';
 import MoveHistory from './pages/MoveHistory';
 import Settings from './pages/Settings';
-import Products from './pages/Products';
+import ProductList from './pages/products/ProductList';
+import ProductForm from './pages/products/ProductForm';
 import ManageUsers from './pages/admin/ManageUsers';
+import WarehouseList from './pages/settings/WarehouseList';
+import WarehouseForm from './pages/settings/WarehouseForm';
+import LocationList from './pages/settings/LocationList';
+import LocationForm from './pages/settings/LocationForm';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -64,16 +69,57 @@ function App() {
                             <MoveHistory />
                         </ProtectedRoute>
                     } />
-                    <Route path="/settings/*" element={
+                    {/* Settings Routes */}
+                    <Route path="/settings" element={
                         <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
                             <Settings />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/warehouse" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <WarehouseList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/warehouse/new" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <WarehouseForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/warehouse/edit/:id" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <WarehouseForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/location" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <LocationList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/location/new" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <LocationForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/location/edit/:id" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <LocationForm />
                         </ProtectedRoute>
                     } />
 
                     {/* Admin Only */}
                     <Route path="/products" element={
                         <ProtectedRoute allowedRoles={['Admin']}>
-                            <Products />
+                            <ProductList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/products/new" element={
+                        <ProtectedRoute allowedRoles={['Admin']}>
+                            <ProductForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/products/edit/:id" element={
+                        <ProtectedRoute allowedRoles={['Admin']}>
+                            <ProductForm />
                         </ProtectedRoute>
                     } />
                     <Route path="/manage-users" element={

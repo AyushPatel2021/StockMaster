@@ -16,6 +16,10 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/warehouses', require('./src/routes/warehouseRoutes'));
+app.use('/api/locations', require('./src/routes/locationRoutes'));
+app.use('/api/categories', require('./src/routes/categoryRoutes'));
+app.use('/api/products', require('./src/routes/productRoutes'));
 
 // Health Check
 app.get('/', (req, res) => {
