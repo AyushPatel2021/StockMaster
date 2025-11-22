@@ -38,11 +38,11 @@ const Landing = () => {
             StockMaster helps warehouses and SMEs track, manage, and optimize inventory with zero clutter and real-time insights.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-            <Link to="/signup" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}>
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <Link to="/signup" className="btn btn-primary inline-flex items-center justify-center" style={{ padding: '0.875rem 2rem', fontSize: '1rem' }}>
               Start Free Trial
             </Link>
-            <Link to="/login" className="btn btn-outline" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'white' }}>
+            <Link to="/login" className="btn btn-outline inline-flex items-center justify-center" style={{ padding: '0.875rem 2rem', fontSize: '1rem', background: 'white' }}>
               View Live Demo
             </Link>
           </div>
