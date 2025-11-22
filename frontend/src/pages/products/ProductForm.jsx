@@ -18,9 +18,10 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow,
+    IconButton
 } from '@mui/material';
-import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { Save as SaveIcon, ArrowBack as ArrowBackIcon, Inventory as InventoryIcon, AttachMoney as MoneyIcon } from '@mui/icons-material';
 
 const ProductForm = () => {
     const [formData, setFormData] = useState({
@@ -97,18 +98,6 @@ const ProductForm = () => {
                 productId = response.data.id;
             }
 
-            // Save inventory updates if in edit mode (or if we just created it, though inventory would be empty initially unless we pre-fetched locations, but for now we only show inventory in edit mode or if we fetch locations for new products too. Let's keep it simple: inventory editing is available after creation or we can fetch locations for new products too. Let's fetch locations for new products too to allow setting initial stock.)
-
-            // Wait, my fetch logic only fetches inventory if isEditMode. Let's fix that.
-            // Actually, for a new product, we can't set inventory until the product exists. 
-            // So the flow is: Create Product -> Then Edit to set Inventory OR we handle it in one go.
-            // To keep it simple and robust: 
-            // 1. Create Product
-            // 2. If successful, iterate inventory state and save each.
-
-            // But wait, if it's a new product, `inventory` state is empty because I only fetch it in `isEditMode`.
-            // I should fetch locations for new products too so the user can see the table.
-
             if (inventory.length > 0) {
                 await Promise.all(inventory.map(item =>
                     axios.post(`/products/${productId}/inventory`, {
@@ -157,110 +146,146 @@ const ProductForm = () => {
     }
 
     return (
-        <Box sx={{ p: 3, maxWidth: 1000, mx: 'auto' }}>
+        <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
             <Fade in={true}>
-                <Paper sx={{ p: 4, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                    <Box display="flex" alignItems="center" mb={4}>
+                <form onSubmit={handleSubmit}>
+                    {/* Header Section */}
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                        <Box display="flex" alignItems="center" gap={2}>
+                            <IconButton onClick={() => navigate('/products')} sx={{ bgcolor: 'white', boxShadow: 1 }}>
+                                <ArrowBackIcon />
+                            </IconButton>
+                            <Box>
+                                <Typography variant="h5" fontWeight="bold" color="text.primary">
+                                    {isEditMode ? 'Edit Product' : 'New Product'}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {isEditMode ? `Update details for ${formData.name}` : 'Create a new product in the catalog'}
+                                </Typography>
+                            </Box>
+                        </Box>
                         <Button
-                            startIcon={<ArrowBackIcon />}
-                            onClick={() => navigate('/products')}
-                            sx={{ mr: 2, color: 'text.secondary' }}
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+                            disabled={loading}
+                            sx={{ px: 4, borderRadius: 2 }}
                         >
-                            Back
+                            Save Product
                         </Button>
-                        <Typography variant="h5" fontWeight="bold">
-                            {isEditMode ? 'Edit Product' : 'Add New Product'}
-                        </Typography>
                     </Box>
 
                     {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={8}>
+                    <Grid container spacing={3}>
+                        {/* Left Column: Product Details */}
+                        <Grid item xs={12} md={8}>
+                            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', height: '100%' }}>
+                                <Typography variant="h6" fontWeight="600" gutterBottom sx={{ mb: 3 }}>
+                                    Product Details
+                                </Typography>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            label="Product Name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            label="Description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                            fullWidth
+                                            multiline
+                                            rows={3}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            label="SKU"
+                                            name="sku"
+                                            value={formData.sku}
+                                            onChange={handleChange}
+                                            required
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            select
+                                            label="Category"
+                                            name="category_id"
+                                            value={formData.category_id}
+                                            onChange={handleChange}
+                                            fullWidth
+                                        >
+                                            {categories.map((cat) => (
+                                                <MenuItem key={cat.id} value={cat.id}>
+                                                    {cat.name}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+                        </Grid>
+
+                        {/* Right Column: Pricing */}
+                        <Grid item xs={12} md={4}>
+                            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', height: '100%' }}>
+                                <Box display="flex" alignItems="center" gap={2} mb={3}>
+                                    <MoneyIcon color="primary" />
+                                    <Typography variant="h6" fontWeight="600">
+                                        Pricing
+                                    </Typography>
+                                </Box>
                                 <Box display="flex" flexDirection="column" gap={3}>
                                     <TextField
-                                        label="Product Name"
-                                        name="name"
-                                        value={formData.name}
+                                        label="Sales Price"
+                                        name="price"
+                                        type="number"
+                                        value={formData.price}
                                         onChange={handleChange}
-                                        required
                                         fullWidth
+                                        InputProps={{ inputProps: { min: 0, step: 0.01 } }}
                                     />
                                     <TextField
-                                        label="Description"
-                                        name="description"
-                                        value={formData.description}
+                                        label="Cost Price"
+                                        name="cost"
+                                        type="number"
+                                        value={formData.cost}
                                         onChange={handleChange}
                                         fullWidth
-                                        multiline
-                                        rows={3}
+                                        InputProps={{ inputProps: { min: 0, step: 0.01 } }}
+                                        helperText="Internal cost for profit calculation"
                                     />
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                label="SKU"
-                                                name="sku"
-                                                value={formData.sku}
-                                                onChange={handleChange}
-                                                required
-                                                fullWidth
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                select
-                                                label="Category"
-                                                name="category_id"
-                                                value={formData.category_id}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            >
-                                                {categories.map((cat) => (
-                                                    <MenuItem key={cat.id} value={cat.id}>
-                                                        {cat.name}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                label="Price"
-                                                name="price"
-                                                type="number"
-                                                value={formData.price}
-                                                onChange={handleChange}
-                                                fullWidth
-                                                InputProps={{ inputProps: { min: 0, step: 0.01 } }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                label="Cost"
-                                                name="cost"
-                                                type="number"
-                                                value={formData.cost}
-                                                onChange={handleChange}
-                                                fullWidth
-                                                InputProps={{ inputProps: { min: 0, step: 0.01 } }}
-                                            />
-                                        </Grid>
-                                    </Grid>
                                 </Box>
-                            </Grid>
+                            </Paper>
+                        </Grid>
 
-                            <Grid item xs={12} md={12}>
-                                <Divider sx={{ my: 2 }} />
-                                <Typography variant="h6" gutterBottom>Inventory & Reordering Rules</Typography>
-                                <TableContainer component={Paper} variant="outlined">
+                        {/* Bottom Section: Inventory */}
+                        <Grid item xs={12}>
+                            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                                <Box display="flex" alignItems="center" gap={2} mb={3}>
+                                    <InventoryIcon color="primary" />
+                                    <Typography variant="h6" fontWeight="600">
+                                        Inventory & Reordering Rules
+                                    </Typography>
+                                </Box>
+                                <TableContainer variant="outlined" sx={{ borderRadius: 2, border: '1px solid #e0e0e0' }}>
                                     <Table size="small">
                                         <TableHead sx={{ bgcolor: 'grey.50' }}>
                                             <TableRow>
-                                                <TableCell>Location</TableCell>
-                                                <TableCell width="200">Current Stock</TableCell>
-                                                <TableCell width="200">Reorder Point (Min)</TableCell>
+                                                <TableCell sx={{ fontWeight: 600 }}>Location</TableCell>
+                                                <TableCell width="200" sx={{ fontWeight: 600 }}>Current Stock</TableCell>
+                                                <TableCell width="200" sx={{ fontWeight: 600 }}>Reorder Point (Min)</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -273,10 +298,12 @@ const ProductForm = () => {
                                                             size="small"
                                                             value={item.quantity}
                                                             disabled
+                                                            fullWidth
                                                             InputProps={{
                                                                 inputProps: { min: 0 },
                                                                 sx: { bgcolor: 'action.hover' }
                                                             }}
+                                                            variant="standard"
                                                         />
                                                     </TableCell>
                                                     <TableCell>
@@ -286,39 +313,26 @@ const ProductForm = () => {
                                                             value={item.min_quantity}
                                                             onChange={(e) => handleInventoryChange(item.location_id, 'min_quantity', e.target.value)}
                                                             InputProps={{ inputProps: { min: 0 } }}
+                                                            fullWidth
+                                                            variant="standard"
                                                         />
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
                                             {inventory.length === 0 && (
                                                 <TableRow>
-                                                    <TableCell colSpan={3} align="center">No locations found. Add locations in Settings first.</TableCell>
+                                                    <TableCell colSpan={3} align="center" sx={{ py: 3, color: 'text.secondary' }}>
+                                                        No locations found. Add locations in Settings first.
+                                                    </TableCell>
                                                 </TableRow>
                                             )}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
-                            </Grid>
+                            </Paper>
                         </Grid>
-
-                        <Box display="flex" justifyContent="flex-end" mt={4}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                size="large"
-                                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
-                                disabled={loading}
-                                sx={{
-                                    borderRadius: 2,
-                                    px: 4,
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                {isEditMode ? 'Update Product' : 'Create Product'}
-                            </Button>
-                        </Box>
-                    </form>
-                </Paper>
+                    </Grid>
+                </form>
             </Fade>
         </Box>
     );

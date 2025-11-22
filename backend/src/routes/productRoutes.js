@@ -20,7 +20,8 @@ router.get('/', authenticateToken, async (req, res) => {
             .select(
                 'products.*',
                 'categories.name as category_name',
-                db.raw('COALESCE(SUM(inventory.quantity), 0) as total_stock')
+                db.raw('COALESCE(SUM(inventory.quantity), 0) as total_stock'),
+                db.raw('COALESCE(SUM(inventory.free_to_use), 0) as free_to_use_stock')
             )
             .groupBy('products.id', 'categories.name')
             .orderBy('products.name', 'asc');
@@ -190,14 +191,20 @@ router.post('/:id/adjust-stock', authenticateToken, async (req, res) => {
                     .first();
 
                 if (existing) {
+                    const delta = quantity - existing.quantity;
                     await trx('inventory')
                         .where({ product_id: id, location_id })
-                        .update({ quantity, updated_at: trx.fn.now() });
+                        .update({
+                            quantity,
+                            free_to_use: trx.raw('free_to_use + ?', [delta]),
+                            updated_at: trx.fn.now()
+                        });
                 } else {
                     await trx('inventory').insert({
                         product_id: id,
                         location_id,
                         quantity,
+                        free_to_use: quantity, // New stock is free to use
                         min_quantity: 0
                     });
                 }

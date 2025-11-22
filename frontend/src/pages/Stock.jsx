@@ -157,12 +157,12 @@ const Stock = () => {
                                             />
                                         </TableCell>
                                         <TableCell align="right">
-                                            {/* Currently Free to Use is same as On Hand as we don't have reservations yet */}
                                             <Chip
-                                                label={product.total_stock}
+                                                label={product.free_to_use_stock}
                                                 size="small"
                                                 variant="outlined"
                                                 color="primary"
+                                                sx={{ fontWeight: 'bold' }}
                                             />
                                         </TableCell>
                                         <TableCell align="right">

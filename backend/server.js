@@ -20,6 +20,9 @@ app.use('/api/warehouses', require('./src/routes/warehouseRoutes'));
 app.use('/api/locations', require('./src/routes/locationRoutes'));
 app.use('/api/categories', require('./src/routes/categoryRoutes'));
 app.use('/api/products', require('./src/routes/productRoutes'));
+app.use('/api/contacts', require('./src/routes/contactRoutes'));
+app.use('/api/receipts', require('./src/routes/receiptRoutes'));
+app.use('/api/deliveries', require('./src/routes/deliveryRoutes'));
 
 // Health Check
 app.get('/', (req, res) => {

@@ -13,6 +13,10 @@ import MoveHistory from './pages/MoveHistory';
 import Settings from './pages/Settings';
 import ProductList from './pages/products/ProductList';
 import ProductForm from './pages/products/ProductForm';
+import ReceiptList from './pages/operations/ReceiptList';
+import ReceiptForm from './pages/operations/ReceiptForm';
+import DeliveryList from './pages/operations/DeliveryList';
+import DeliveryForm from './pages/operations/DeliveryForm';
 import ManageUsers from './pages/admin/ManageUsers';
 import WarehouseList from './pages/settings/WarehouseList';
 import WarehouseForm from './pages/settings/WarehouseForm';
@@ -52,6 +56,36 @@ function App() {
                     } />
 
                     {/* Operations - All Roles */}
+                    <Route path="/operations/receipts" element={
+                        <ProtectedRoute>
+                            <ReceiptList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/receipts/new" element={
+                        <ProtectedRoute>
+                            <ReceiptForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/receipts/:id" element={
+                        <ProtectedRoute>
+                            <ReceiptForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/deliveries" element={
+                        <ProtectedRoute>
+                            <DeliveryList />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/deliveries/new" element={
+                        <ProtectedRoute>
+                            <DeliveryForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/operations/deliveries/:id" element={
+                        <ProtectedRoute>
+                            <DeliveryForm />
+                        </ProtectedRoute>
+                    } />
                     <Route path="/operations/*" element={
                         <ProtectedRoute>
                             <Operations />

@@ -28,7 +28,7 @@ exports.up = function (knex) {
             table.integer('min_quantity').defaultTo(0); // Reordering rule
             table.unique(['product_id', 'location_id']);
             table.timestamps(true, true);
-        });
+        })
 };
 
 /**

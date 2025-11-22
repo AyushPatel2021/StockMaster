@@ -65,20 +65,21 @@ const Navbar = () => {
                                 <div className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-[9999] transition-all duration-200 ease-out animate-fadeIn">
                                     <div className="py-1">
                                         <Link
-                                            to="/operations/receipt"
+                                            to="/operations/receipts"
                                             onClick={() => setIsOperationsOpen(false)}
                                             className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-150"
                                         >
-                                            <span className="block">Receipt</span>
+                                            <span className="block">Receipts</span>
                                         </Link>
                                         <div className="border-t border-gray-100 my-1"></div>
                                         <Link
-                                            to="/operations/delivery"
+                                            to="/operations/deliveries"
                                             onClick={() => setIsOperationsOpen(false)}
                                             className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-150"
                                         >
-                                            <span className="block">Delivery</span>
+                                            <span className="block">Deliveries</span>
                                         </Link>
+
                                         <div className="border-t border-gray-100 my-1"></div>
                                         <Link
                                             to="/operations/adjustment"
@@ -234,13 +235,7 @@ const Navbar = () => {
                         >
                             Receipt
                         </Link>
-                        <Link
-                            to="/operations/delivery"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
-                        >
-                            Delivery
-                        </Link>
+
                         <Link
                             to="/operations/adjustment"
                             onClick={() => setIsMobileMenuOpen(false)}
