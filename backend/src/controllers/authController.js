@@ -42,11 +42,11 @@ exports.signup = async (req, res) => {
                 email,
                 password_hash: hashedPassword,
             })
-            .returning(['id', 'login_id', 'email', 'created_at']);
+            .returning(['id', 'login_id', 'email', 'role', 'created_at']);
 
         // Generate token
         const token = jwt.sign(
-            { id: newUser.id, login_id: newUser.login_id },
+            { id: newUser.id, login_id: newUser.login_id, role: newUser.role },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id, login_id: user.login_id },
+            { id: user.id, login_id: user.login_id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -87,7 +87,7 @@ exports.login = async (req, res) => {
         res.json({
             message: 'Login successful',
             token,
-            user: { id: user.id, login_id: user.login_id, email: user.email },
+            user: { id: user.id, login_id: user.login_id, email: user.email, role: user.role },
         });
     } catch (error) {
         console.error(error);

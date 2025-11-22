@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -7,44 +7,84 @@ import ForgotPassword from './pages/ForgotPassword';
 import EnterOTP from './pages/EnterOTP';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
+import Operations from './pages/Operations';
+import Stock from './pages/Stock';
+import MoveHistory from './pages/MoveHistory';
+import Settings from './pages/Settings';
+import Products from './pages/Products';
+import ManageUsers from './pages/admin/ManageUsers';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
 
-// Protected Route Wrapper
-const ProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
-    return children;
-};
-
-// Public Route Wrapper (redirects to dashboard if already logged in)
-const PublicRoute = ({ children }) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        return <Navigate to="/dashboard" replace />;
-    }
-    return children;
+// Layout for authenticated pages
+const AuthLayout = () => {
+    return (
+        <div className="min-h-screen bg-gray-100">
+            <Navbar />
+            <Outlet />
+        </div>
+    );
 };
 
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-                <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-                <Route path="/enter-otp" element={<PublicRoute><EnterOTP /></PublicRoute>} />
-                <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+                {/* Public Routes */}
+                <Route path="/" element={<Landing />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/enter-otp" element={<EnterOTP />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
-                <Route
-                    path="/dashboard"
-                    element={
+                {/* Protected Routes */}
+                <Route element={<AuthLayout />}>
+                    <Route path="/dashboard" element={
                         <ProtectedRoute>
                             <Dashboard />
                         </ProtectedRoute>
-                    }
-                />
+                    } />
+
+                    {/* Operations - All Roles */}
+                    <Route path="/operations/*" element={
+                        <ProtectedRoute>
+                            <Operations />
+                        </ProtectedRoute>
+                    } />
+
+                    {/* Inventory Manager & Admin */}
+                    <Route path="/stock" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <Stock />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/move-history" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <MoveHistory />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/settings/*" element={
+                        <ProtectedRoute allowedRoles={['InventoryManager', 'Admin']}>
+                            <Settings />
+                        </ProtectedRoute>
+                    } />
+
+                    {/* Admin Only */}
+                    <Route path="/products" element={
+                        <ProtectedRoute allowedRoles={['Admin']}>
+                            <Products />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/manage-users" element={
+                        <ProtectedRoute allowedRoles={['Admin']}>
+                            <ManageUsers />
+                        </ProtectedRoute>
+                    } />
+                </Route>
+
+                {/* Catch all */}
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>
     );
